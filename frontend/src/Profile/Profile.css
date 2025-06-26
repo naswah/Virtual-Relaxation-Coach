@@ -1,0 +1,8 @@
+.buttonn{
+  padding: 8px;
+  background:linear-gradient(to right, #C3D0A2, #B5CCCF);
+  margin-right: 10px;
+  border-radius: 8px;
+  border: none;
+  width: 100px;
+}

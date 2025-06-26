@@ -1,0 +1,9 @@
+Content-based recommender systems always use keyword to carry out recommendations. The process of content-based recommender systems is as follows:
+(a) identifying the item contents 
+(b) identifying the user’s interests and 
+(c) using the methods used to match them. 
+A keyword is an important word or phrase that represents the main idea or topic in a piece of information. Keywords help in finding, organizing, or understanding content quickly. These maps are made using the learner’s profile, which includes the learning materials they visited and how they studied on an online learning platform. [5]
+Why keyword based content filtering recommendation?
+a.	No Need for User History: Ideal for systems without extensive user interaction data (e.g., new users or anonymous sessions).
+b.	Emotion-Driven Personalization: Recommendations are dynamically adjusted based on the detected emotional state.
+c.	Lightweight and Efficient: No need for complex machine learning models or collaborative filtering logic.
