@@ -1,6 +1,9 @@
+import './Emotion.css'
 function Emotion(){
     return(
-        <div><h1>Detect your emotion</h1></div>
+        <div className="Emotion">
+            <h1>Detect your emotion</h1>
+        </div>
     );
 }
 export default Emotion;

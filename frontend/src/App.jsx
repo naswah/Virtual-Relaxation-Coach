@@ -14,19 +14,35 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Home page without layout */}
         <Route path="/" element={<Home />} />
 
-        {/* FAQ Page */}
-        <Route path="/faq" element={
+        <Route
+  path="/faq"
+  element={
+    (() => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.role === "admin") {
+        return (
           <>
             <Header />
-            <Faq isAdmin={true} /> {/* Or set this based on login */}
+            <AdminDashboard />
             <Footer />
           </>
-        } />
+        );
+      } else {
+        return (
+          <>
+            <Header />
+            <Faq />
+            <Footer />
+          </>
+        );
+      }
+    })()
+  }
+/>
 
-        {/* Emotion Detection */}
+
         <Route path="/emotion" element={
           <>
             <Header />
@@ -35,7 +51,6 @@ function App() {
           </>
         } />
 
-        {/* User Profile */}
         <Route path="/profile" element={
           <>
             <Header />
@@ -44,7 +59,6 @@ function App() {
           </>
         } />
 
-        {/* Registration Page */}
         <Route path="/register" element={
           <>
             <Header />
@@ -53,7 +67,6 @@ function App() {
           </>
         } />
 
-        {/* Login Page */}
         <Route path="/login" element={
           <>
             <Header />
@@ -62,14 +75,7 @@ function App() {
           </>
         } />
 
-        {/* Admin Dashboard (only for admins) */}
-        <Route path="/admin" element={
-          <>
-            <Header />
-            <AdminDashboard />
-            <Footer />
-          </>
-        } />
+      
       </Routes>
     </BrowserRouter>
   );

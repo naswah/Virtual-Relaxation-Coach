@@ -1,84 +1,88 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import './Faq.css';
+import AdminDashboard from '../AdminDashboard';
 
-function Faq({ isAdmin }) {
+const Faq = () => {
   const [faqs, setFaqs] = useState([]);
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [expandedItems, setExpandedItems] = useState({});
+  const [user, setUser] = useState(null);
+
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/faqs')
-      .then(response => setFaqs(response.data))
-      .catch(error => console.error("Error fetching FAQs:", error));
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
   }, []);
 
-  const handleAddFaq = async () => {
-    if (!question || !answer) return alert("Please fill both fields");
+  // If user is admin, show AdminDashboard instead of FAQ
+  if (user && user.role === 'admin') {
+    return <AdminDashboard />;
+  }
+
+  // Fetch FAQs from database
+  const fetchFAQs = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/api/faqs', { question, answer });
-      setFaqs([...faqs, res.data]);
-      setQuestion('');
-      setAnswer('');
-    } catch (err) {
-      console.error("Failed to add FAQ:", err);
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/faqs');
+      if (response.ok) {
+        const data = await response.json();
+        setFaqs(data);
+      } else {
+        console.error('Failed to fetch FAQs');
+      }
+    } catch (error) {
+      console.error('Error fetching FAQs:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDeleteFaq = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/faqs/${id}`);
-      setFaqs(faqs.filter(faq => faq._id !== id));
-    } catch (err) {
-      console.error("Failed to delete FAQ:", err);
-    }
+  useEffect(() => {
+    fetchFAQs();
+  }, []);
+
+  const toggleExpand = (id) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
-  return (
-    <>
-      <div style={{ padding: '20px' }}>
-        <h1>Frequently Asked Questions</h1>
-
-        {faqs.length === 0 ? (
-          <p>No FAQs available.</p>
-        ) : (
-          <ul>
-            {faqs.map((faq) => (
-              <li key={faq._id} style={{ marginBottom: '15px' }}>
-                <strong>Q:</strong> {faq.question}<br />
-                <strong>A:</strong> {faq.answer}
-                {isAdmin && (
-                  <button onClick={() => handleDeleteFaq(faq._id)} style={{ marginLeft: '10px', color: 'red' }}>
-                    Delete
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {isAdmin && (
-          <div style={{ marginTop: '30px' }}>
-            <h3>Add New FAQ</h3>
-            <input
-              type="text"
-              placeholder="Question"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              style={{ display: 'block', marginBottom: '10px' }}
-            />
-            <input
-              type="text"
-              placeholder="Answer"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              style={{ display: 'block', marginBottom: '10px' }}
-            />
-            <button onClick={handleAddFaq}>Add FAQ</button>
-          </div>
-        )}
+  if (loading) {
+    return (
+      <div className="faq-container">
+        <div className="loading">
+          <div className="spinner"></div>
+          <p>Loading FAQs...</p>
+        </div>
       </div>
-    </>
+    );
+  }
+
+ return (
+    <div className="faq-container">
+      <h1>Frequently Asked Questions</h1>
+
+      {faqs.length === 0 ? (
+        <div className="no-faqs">
+          <h3>No FAQs available at the moment</h3>
+          <p>Please check back later for updates.</p>
+        </div>
+      ) : (
+        
+        <div className="faq-list">
+          {faqs.map((faq, index) => (
+            <div key={faq._id} className={`faq-block ${index % 2 === 0 ? 'blue-bg' : 'green-bg'}`}>
+              <p className="faq-question">{index + 1}. {faq.question}</p>
+              <p className="faq-answer">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
-}
+};
 
 export default Faq;
