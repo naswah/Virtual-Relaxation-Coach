@@ -1,3 +1,6 @@
+.ProfilePage{
+  height: 55vh;
+}
 .buttonn{
   padding: 8px 16px;
   background:linear-gradient(to right, #C3D0A2, #B5CCCF);

@@ -18,7 +18,7 @@ function Profile() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="ProfilePage">
       <h2>Welcome to VRC</h2>
 
       <button className="buttonn" onClick={() => navigate("/register")}>
