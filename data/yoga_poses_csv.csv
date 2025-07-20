@@ -1,0 +1,166 @@
+id,emotion,type,pose_name,description,pose_picture
+1,angry,yoga,Child's Pose(Balasana),"Child’s Pose is a gentle resting yoga posture that helps calm the mind, relieve tension, and stretch the back and hips. It's often used as a resting position between more  challenging poses or at the beginning and end of a yoga session.
+How to do it:
+1. Start by kneeling on the floor with your big toes touching.
+2. Sit back on your heels and separate your knees about hip-width apart (or wider if more comfortable).
+3. Exhale and slowly fold forward, bringing your torso between your thighs.
+4. Rest your forehead on the floor and extend your arms forward with palms facing down — or let them rest by your sides.
+5. Breathe deeply and stay in this pose for 30 seconds to a few minutes.
+",public/images/childpose.jpg
+2,angry,yoga,Legs-up-the-Wall Pose (Viparita Karani),"This pose reduces stress and anger.
+How to do it:
+1. Sit sideways next to a wall, with one hip touching it.
+2. Gently lie back and swing your legs up onto the wall.
+3. Adjust so your back and head rest on the floor and your legs are straight up.
+4. Keep arms relaxed at your sides, palms facing up.
+5. Close your eyes, breathe deeply, and stay for 5–15 minutes.",public/images/legsup.jpg
+3,angry,facialexercises,Jaw Relaxer,"Slowly open and close mouth while massaging the jaw.
+How to do:
+1. Sit comfortably and keep lips closed, teeth slightly apart.
+2. Drop your jaw gently to create space.
+3. Rest your tongue on the roof of your mouth.
+4. Breathe slowly and relax your jaw.
+5. Hold for 30–60 seconds.",public/images/jawrelaxer.jpg
+4,angry,facialexercises,Eyebrow Release,"Raise and hold eyebrows for 5 seconds, relax.
+How to do it:
+1. Place your index fingers just above each eyebrow.
+2. Gently press and smooth upward toward the forehead.
+3. Hold for a few seconds while breathing deeply.
+4. Repeat 5–10 times to relax the muscles.",public/images/eyebrow.jpg
+5,fear,yoga,Tree Pose (Vrikshasana),"Tree Pose is a standing yoga posture that improves balance, focus, and strengthens the legs and core.
+How to do it:
+1. Stand tall with feet together and arms at your sides.
+2. Shift weight to your left leg.
+3. Place the sole of your right foot on your inner left thigh or calf (not on the knee).
+4. Bring your palms together in front of your chest (prayer position) or raise arms overhead.
+5. Hold for 20–60 seconds, then switch sides.",public/images/treepose.jpg
+6,fear,yoga,Warrior II (Virabhadrasana II),"Warrior II is a powerful standing pose that builds strength in the legs, opens the hips, and improves focus and stamina.
+How to do it:
+1. Stand with feet wide apart.
+2. Turn your right foot out 90°, left foot slightly in.
+3. Bend your right knee so it’s over the ankle.
+4. Extend your arms out to the sides, parallel to the floor.
+5. Gaze over your right hand.
+6. Hold for 30 seconds to 1 minute, then switch sides.",public/images/warrior.jpg
+7,fear,yoga,Bridge Pose (Setu Bandhasana),"How to do it:
+1. Lie on your back with knees bent and feet flat on the floor, hip-width apart.
+2. Place arms by your sides, palms facing down.
+3. Press your feet and arms into the floor.
+4. Lift your hips toward the ceiling.
+5. Hold for 30 seconds to 1 minute, then slowly lower down.",public/images/bridge.jpg
+8,fear,facialexercises,Cheek Puff,"How to do it:
+1. Take a deep breath and fill your cheeks with air.
+2. Hold the air inside, puffing your cheeks out.
+3. Move the air from one cheek to the other slowly.
+4. Hold for 5 seconds on each side.
+5. Repeat 5–10 times",public/images/cheek puff.jpg
+9,fear,facialexercises,Eye Soother,"Eye Soother is a relaxing exercise that helps relieve eye strain and reduces tension around the eyes.
+How to do it:
+1. Sit comfortably and close your eyes gently.
+2. Place your palms lightly over your closed eyes without pressing.
+3. Breathe deeply and relax for 30 seconds.
+4. Remove your hands slowly and open your eyes gently.
+5. Repeat 2–3 times if needed.",public/images/eyesoother.jpg
+10,happy,yoga,Sun Salutation (Surya Namaskar),"Sun Salutation is a dynamic sequence of yoga poses that warms up the body, improves flexibility, strength, and promotes mindfulness by linking breath with movement.
+How to do it:
+1. Prayer Pose (Pranamasana): Stand tall, hands in prayer at your chest.
+2. Upward Salute (Urdhva Hastasana): Inhale, raise arms overhead, arch back slightly.
+3. Standing Forward Bend (Uttanasana): Exhale, fold forward, hands to the floor.
+4. Halfway Lift (Ardha Uttanasana): Inhale, lift your torso halfway, keep your back flat.
+5. Plank Pose: Exhale, step back into plank, keep body straight.
+6. Chaturanga Dandasana: Lower down keeping elbows close to ribs.
+7. Upward-Facing Dog (Urdhva Mukha Svanasana): Inhale, straighten arms, lift chest.
+8. Downward-Facing Dog (Adho Mukha Svanasana): Exhale, lift hips, form an inverted V.
+9. Halfway Lift: Inhale, step or jump forward, lift torso halfway.
+10. Standing Forward Bend: Exhale, fold forward.
+11. Upward Salute: Inhale, sweep arms up and back.
+12. Prayer Pose: Exhale, bring hands to prayer at chest.",public/images/suryanamaskar.jpg
+11,happy,yoga,Camel Pose (Ustrasana),"Camel Pose is a deep backbend that stretches the front body, opens the chest, and strengthens the back muscles. It helps improve posture and stimulates the nervous system. It incerases happiness hormones.
+How to do it:
+1. Kneel on the floor with knees hip-width apart and thighs perpendicular to the ground.
+2. Place your hands on your lower back with fingers pointing down.
+3. Inhale, lift your chest and gently arch your back.
+4. Slowly reach your hands back to grasp your heels (if comfortable).
+5. Keep your neck neutral or gently drop your head back.
+6. Hold for 20–30 seconds while breathing steadily.
+7. To come out, bring your hands back to your lower back and slowly rise up.",public/images/camel.jpg
+12,happy ,facialexercises,Smile Stretch,Stretch smile wide for 5 seconds and release.,public/images/smile.jpg
+13,neutral,yoga,Cat-Cow Pose (Marjaryasana/Bitilasana),"Cat-Cow is a gentle flow between two poses that warms up the spine, improves flexibility, and relieves tension in the back and neck. Energizes and balances mood.
+How to do it:
+1. Start on all fours with wrists under shoulders and knees under hips.
+2. Cow Pose (Bitilasana): Inhale, drop your belly, lift your chest and tailbone, look slightly upward.
+3. Cat Pose (Marjaryasana): Exhale, round your spine up toward the ceiling, tuck your chin and tailbone.
+4. Flow between Cow and Cat slowly, linking your breath with movement.
+5. Repeat for 5–10 breaths.",public/images/catcow.jpg
+14,neutal,yoga,Mountain Pose (Tadasana),"Grounding, builds calm presence. Mountain Pose is a foundational standing posture that promotes good posture, balance, and body awareness. It helps build strength and steadiness.
+How to do it:
+1. Stand tall with feet together or hip-width apart, grounding evenly through both feet.
+2. Engage your thigh muscles slightly and tuck your tailbone under.
+3. Lengthen your spine, lifting the crown of your head toward the ceiling.
+4. Relax your shoulders away from your ears.
+5. Let your arms hang naturally by your sides with palms facing forward or inward.
+6. Breathe deeply and hold for 30 seconds to 1 minute.
+",public/images/mountain.jpg
+15,neutral,yoga,Lotus Pose (Padmasana),"Encourages mindfulness and awareness. Lotus Pose is a classic seated meditation posture that promotes physical stability and mental calm. It helps open the hips and encourages deep, focused breathing.
+How to do it:
+1. Sit on the floor with legs extended straight.
+2. Bend your right knee and place your right foot on your left thigh, sole facing up.
+3. Bend your left knee and place your left foot on your right thigh, sole facing up.
+4. Rest your hands on your knees, palms up or in a mudra (gesture).
+5. Keep your spine straight and shoulders relaxed.
+6.Breathe deeply and hold the pose for several minutes.",public/images/lotus.jpg
+16,neutral,facialexercises,Forehead Smoother,"Use fingers to gently smooth forehead.
+Forehead Smoother is a facial exercise that helps reduce tension, soften forehead lines, and promote relaxation in the upper face.
+1. Place both hands on your forehead, fingers spread out across the skin.
+2. Gently sweep your fingers outward toward your temples, applying light pressure.
+3. Keep your forehead relaxed—don’t raise your eyebrows.
+4. Repeat this smoothing motion 5–10 times, breathing slowly.",public/images/foreheadsoother.jpg
+17,sad,yoga,Child Pose (Balasana),"Child’s Pose is a gentle resting yoga posture that helps calm the mind, relieve tension, and stretch the back and hips. It's often used as a resting position between more  challenging poses or at the beginning and end of a yoga session.
+How to do it:
+1. Start by kneeling on the floor with your big toes touching.
+2. Sit back on your heels and separate your knees about hip-width apart (or wider if more comfortable).
+3. Exhale and slowly fold forward, bringing your torso between your thighs.
+4. Rest your forehead on the floor and extend your arms forward with palms facing down — or let them rest by your sides.
+5. Breathe deeply and stay in this pose for 30 seconds to a few minutes.",public/images/childpose.jpg
+18,sad,yoga,Fish Pose (Matsyasana),"Fish Pose is a reclining backbend that stretches the chest, throat, and shoulders. It opens the heart and lungs, improving posture and deep breathing.
+How to do it:
+1. Lie on your back with legs extended and arms by your sides.
+2. Slide your hands under your hips, palms facing down.
+3. Press your elbows into the floor and lift your chest upward.
+4. Gently tilt your head back, resting the crown of your head on the floor.
+5. Keep your legs active and hold for 20–30 seconds.
+6. Slowly lower your head and chest to release.",public/images/fish.jpg
+19,sad,facialexercises,Upper Lip Stretch,"Upper Lip Stretch is a facial exercise that tones the muscles around the mouth and helps lift and firm the upper lip area.
+How to do:
+1. Sit or stand with a relaxed posture.
+2. Lift your upper lip as high as possible without moving your head.
+3. Hold the stretch for 5–10 seconds.
+4. Relax and repeat 5–10 times.",
+20,sad,facialexercises,Eye Opener,"Eye Opener is a facial exercise that helps lift droopy eyelids, reduce puffiness, and tone the muscles around the eyes for a more awake, refreshed look.
+How to do it:
+1. Place your index fingers under your eyebrows.
+2. Gently lift the eyebrows upward.
+3. While holding them up, try to slowly close your eyes.
+4. Hold for 5 seconds, then relax.
+5. Repeat 5–10 times.",public/images/eyeopener.jpg
+21,surprise,yoga,Standing Forward Fold (Uttanasana),"Calms sudden emotional rush. Standing Forward Fold is a calming yoga pose that stretches the hamstrings, calves, and back while relieving stress and tension..
+How to do it:
+1. Stand tall with feet hip-width apart.
+2. Inhale and raise your arms overhead.
+3. Exhale and bend forward from the hips, not the waist.
+4. Let your head and arms hang down freely or touch the floor.
+5. Keep a slight bend in your knees if needed.
+6. Hold for 30 seconds to 1 minute, breathing deeply.",public/images/standforward.jpg
+22,surprise,yoga,Eagle Pose (Garudasana),"How to do it:
+1. Stand tall in Mountain Pose.
+2. Bend your knees slightly and lift your right leg, wrapping it around your left leg.
+3. Cross your right arm under your left arm and bring palms to touch (or as close as possible).
+4. Sit deeper into the pose while keeping your spine straight.
+5. Focus your gaze on a fixed point and hold for 20–30 seconds.
+6. Slowly release and switch sides.",public/images/eagle.jpg
+23,surprise,facialexercises,O-Face Stretch,"How to do it:
+1. Form your lips into a wide “O” shape.
+2. Keep your lips tightly rounded while stretching your mouth as wide as possible.
+3. Lift your cheeks upward (like you're smiling) without changing the O shape.
+4. Hold for 5–10 seconds.
+5. Relax and repeat 5–10 times.",public/images/oface.jpg

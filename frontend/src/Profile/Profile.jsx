@@ -12,9 +12,11 @@ function Profile() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Remove user data
-    setIsLoggedIn(false);            // Update state
-    navigate("/login");              // Redirect to login
+    localStorage.removeItem("user"); 
+    setIsLoggedIn(false);            
+    navigate("/login");              
+
+    window.location.reload();
   };
 
   return (

@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Home from './Home';
 import Faq from './FAQ/Faq';
 import Emotion from './Emotion/Emotion';
@@ -11,36 +12,29 @@ import Login from "./Register/Login";
 import AdminDashboard from './AdminDashboard';
 
 function App() {
+
+    const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
 
-        <Route
-  path="/faq"
-  element={
-    (() => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user && user.role === "admin") {
-        return (
-          <>
-            <Header />
-            <AdminDashboard />
-            <Footer />
-          </>
-        );
-      } else {
-        return (
-          <>
-            <Header />
-            <Faq />
-            <Footer />
-          </>
-        );
-      }
-    })()
-  }
-/>
+          <Route path="/faq" element={
+            <>
+              <Header />
+              {user?.role === "admin" ? <AdminDashboard /> : <Faq />}
+              <Footer />
+            </>
+          }
+        />
 
 
         <Route path="/emotion" element={

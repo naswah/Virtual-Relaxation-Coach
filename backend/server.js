@@ -5,6 +5,11 @@ import bcrypt from "bcrypt";
 import User from './models/users.js';
 import FAQs from './models/faqModels.js';
 
+import { fileURLToPath } from "url"; 
+import fs from "fs"; //file read garna help garch
+import path from "path";
+import csv from "csv-parser"; //for csv files
+
 const app = express();
 // const PORT = 5000;
 
@@ -64,6 +69,7 @@ app.post("/login", async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: "Invalid password" });
 
     res.json({ message: "Login successful", user });
+     window.location.reload();
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -142,6 +148,72 @@ app.delete("/users/:id", async (req, res) => {
     console.error(err);
     res.status(500).json("Error deleting user");
   }
+});
+
+//For yoga poses
+const __dirname = path.dirname(fileURLToPath(import.meta.url));  
+
+const yogaData = [];
+fs.createReadStream(
+  path.join(__dirname, "..", "data", "yoga_poses_csv.csv")        
+)
+  .pipe(csv())
+  .on("data", row => yogaData.push(row))
+  .on("end", () => console.log("Yoga pose CSV cached:", yogaData.length));
+
+
+app.post("/recommend", (req, res) => {
+  const { aiEmotion, answers } = req.body;        
+  if (!aiEmotion || !Array.isArray(answers) || answers.length !== 4)
+    return res.status(400).json("aiEmotion + 4 answers required.");
+
+
+  const scores = {};
+  const bump  = emo => (scores[emo] = (scores[emo] || 0) + 1);
+  bump(aiEmotion);
+  answers.forEach(bump);
+
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+  const MAX_POSES = 5;
+  const totalScore = sorted.reduce((s, [,v]) => s + v, 0);
+  const recs = [];
+  let remaining = Math.min(MAX_POSES, totalScore);
+
+  for (const [emotion, score] of sorted) {
+    const ideal  = Math.round((score / totalScore) * MAX_POSES);
+    const quota  = Math.max(1, Math.min(ideal, remaining));
+
+      const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+
+    const yogaPoses = shuffle(
+      yogaData.filter(p => p.emotion === emotion && p.type === "yoga")
+    ).slice(0, quota).map(p => ({
+      name: p.pose_name,
+      image: p.pose_picture,
+      description: p.description,
+      type: "yoga"
+    }));
+
+    const facialPoses = shuffle(
+      yogaData.filter(p => p.emotion === emotion && p.type === "facial")
+    ).slice(0, 1).map(p => ({
+      name: p.pose_name,
+      image: p.pose_picture,
+      description: p.description,
+      type: "facial"
+    }));
+
+    const allPoses = [...yogaPoses, ...facialPoses];
+
+    if (allPoses.length)
+      recs.push({ emotion, poses: allPoses });
+
+    remaining -= allPoses.length;
+    if (remaining <= 0) break;
+  }
+
+  res.json({ recommendations: recs });
 });
 
 app.get("/", (req, res) => {

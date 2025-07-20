@@ -29,11 +29,11 @@
 }
 
 .blue-bg {
-  background-color: #B4CCCE;
+    background-color: rgba(180, 204, 206, 0.5); 
 }
 
 .green-bg {
-  background-color: #C3D0A2; 
+   background-color: rgba(195, 208, 162, 0.6); 
 }
 
 .faq-question {
