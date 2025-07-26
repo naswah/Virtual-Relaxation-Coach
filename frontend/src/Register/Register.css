@@ -8,6 +8,10 @@
 h2{
     align-items: center;
     font-family: "Poppins", sans-serif;
+    color: #333;
+}
+label{
+    color: #333;
 }
 .box{
     background: #e4f3bf;

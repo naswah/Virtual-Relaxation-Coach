@@ -1,0 +1,70 @@
+.recommendation-container {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: linear-gradient(to right, #B4CCCE, #C3D0A2);
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-container h2 {
+  font-family: 'Poppins', sans-serif;
+  color: #2e7d32;
+  margin-bottom: 1rem;
+}
+
+.recommendation-section {
+  margin-bottom: 1.5rem;
+}
+
+.recommendation-section h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  color: #00796b;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.recommendation-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recommendation-section li {
+  background-color: #ffffff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.recommendation-section h5 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: #37474f;
+}
+
+.pose-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.pose-info p {
+  font-size: 0.95rem;
+  color: #000000;
+  margin: 0;
+}
+
+.pose-image {
+  flex: 1;
+  min-width: 250px;
+  max-width: 35%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}

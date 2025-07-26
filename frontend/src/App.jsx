@@ -10,6 +10,7 @@ import Profile from './Profile/Profile';
 import Register from "./Register/Register";
 import Login from "./Register/Login";
 import AdminDashboard from './AdminDashboard';
+import AddRecommendation from './Emotion/AddRecommendation';
 
 function App() {
 
@@ -40,7 +41,7 @@ function App() {
         <Route path="/emotion" element={
           <>
             <Header />
-            <Emotion />
+            {user?.role === "admin" ? <AddRecommendation /> : <Emotion />}
             <Footer />
           </>
         } />

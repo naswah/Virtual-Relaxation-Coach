@@ -4,11 +4,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import User from './models/users.js';
 import FAQs from './models/faqModels.js';
-
-import { fileURLToPath } from "url"; 
-import fs from "fs"; //file read garna help garch
-import path from "path";
-import csv from "csv-parser"; //for csv files
+import YogaPose from './models/yogaPoses.js';
 
 const app = express();
 // const PORT = 5000;
@@ -150,58 +146,48 @@ app.delete("/users/:id", async (req, res) => {
   }
 });
 
-//For yoga poses
-const __dirname = path.dirname(fileURLToPath(import.meta.url));  
+app.post("/recommend", async (req, res) => {
+  const { aiEmotion, answers } = req.body;
 
-const yogaData = [];
-fs.createReadStream(
-  path.join(__dirname, "..", "data", "yoga_poses_csv.csv")        
-)
-  .pipe(csv())
-  .on("data", row => yogaData.push(row))
-  .on("end", () => console.log("Yoga pose CSV cached:", yogaData.length));
-
-
-app.post("/recommend", (req, res) => {
-  const { aiEmotion, answers } = req.body;        
   if (!aiEmotion || !Array.isArray(answers) || answers.length !== 4)
     return res.status(400).json("aiEmotion + 4 answers required.");
 
-
   const scores = {};
-  const bump  = emo => (scores[emo] = (scores[emo] || 0) + 1);
+  const bump = (emo) => (scores[emo] = (scores[emo] || 0) + 1);
   bump(aiEmotion);
   answers.forEach(bump);
 
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
 
   const MAX_POSES = 5;
-  const totalScore = sorted.reduce((s, [,v]) => s + v, 0);
+  const totalScore = sorted.reduce((s, [, v]) => s + v, 0);
   const recs = [];
   let remaining = Math.min(MAX_POSES, totalScore);
 
-  for (const [emotion, score] of sorted) {
-    const ideal  = Math.round((score / totalScore) * MAX_POSES);
-    const quota  = Math.max(1, Math.min(ideal, remaining));
+  const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
 
-      const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+  for (const [emotion, score] of sorted) {
+    const ideal = Math.round((score / totalScore) * MAX_POSES);
+    const quota = Math.max(1, Math.min(ideal, remaining));
 
     const yogaPoses = shuffle(
-      yogaData.filter(p => p.emotion === emotion && p.type === "yoga")
+      await YogaPose.find({ emotion, type: "yoga" })
     ).slice(0, quota).map(p => ({
       name: p.pose_name,
       image: p.pose_picture,
       description: p.description,
-      type: "yoga"
+      type: "yoga",
+      youtube: p.youtube_link || null
     }));
 
     const facialPoses = shuffle(
-      yogaData.filter(p => p.emotion === emotion && p.type === "facial")
+      await YogaPose.find({ emotion, type: "facialexpression" })
     ).slice(0, 1).map(p => ({
       name: p.pose_name,
       image: p.pose_picture,
       description: p.description,
-      type: "facial"
+      type: "facialexpression",
+      youtube: p.youtube_link || null
     }));
 
     const allPoses = [...yogaPoses, ...facialPoses];
@@ -215,6 +201,68 @@ app.post("/recommend", (req, res) => {
 
   res.json({ recommendations: recs });
 });
+
+
+//To add yogaPose
+app.post("/yoga/add", async (req, res) => {
+  try {
+    const { pose_name, type, emotion, description, pose_picture, youtube_link, locked } = req.body;
+
+    const newPose = new YogaPose({
+      pose_name,
+      type,
+      emotion,
+      description,
+      pose_picture,
+      youtube_link,
+      locked: Boolean(locked) 
+    });
+
+    await newPose.save();
+    res.status(200).send("Pose added successfully");
+    console.log("Received locked value:", locked, typeof locked);
+
+  } catch (err) {
+    console.error("Error while adding pose:", err);
+    res.status(500).send("Failed to add pose");
+  }
+});
+
+// Fetch all yoga poses
+app.get("/yoga/all", async (req, res) => {
+  try {
+    const poses = await YogaPose.find();
+    res.status(200).json(poses);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch poses" });
+  }
+});
+
+
+//to delete yoga poses
+app.delete("/yoga/delete/:id", async (req, res) => {
+  try {
+    const pose = await YogaPose.findById(req.params.id);
+
+    if (!pose) {
+      return res.status(404).send("Pose not found");
+    }
+
+    if (pose.locked) {
+      return res.status(403).send("Cannot delete locked pose");
+    }
+
+    await YogaPose.findByIdAndDelete(req.params.id);
+    res.status(200).send("Pose deleted");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+
+
 
 app.get("/", (req, res) => {
     res.send("Server is running");

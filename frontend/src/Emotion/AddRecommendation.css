@@ -1,0 +1,132 @@
+.add-recommendation {
+  margin: 40px 100px; 
+  padding: 30px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  background-color: #fefefe;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.add-recommendation__title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #2b2b2b;
+  font-size: 24px;
+}
+
+.add-recommendation__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  background-color: #fff;
+  transition: border 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #333;
+  outline: none;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  display: flex;
+}
+
+.btn-submit {
+  padding: 10px;
+  font-size: 16px;
+  background: linear-gradient(to right, #C3D0A2, #B4CCCE);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-submit:hover {
+  border: 1px solid #747373;
+}
+
+.add-recommendation__subtitle {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Pose List */
+.pose-list {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.pose-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  /* Make card size fixed */
+  min-height: 400px;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.pose-card h3 {
+  margin-bottom: 10px;
+  color: #444;
+  font-size: 18px;
+}
+
+.pose-card p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.pose-card img {
+  max-width: 50%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
