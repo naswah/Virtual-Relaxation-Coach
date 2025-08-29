@@ -5,113 +5,90 @@ import bcrypt from "bcrypt";
 import User from './models/users.js';
 import FAQs from './models/faqModels.js';
 import YogaPose from './models/yogaPoses.js';
+import multer from "multer";
 
 const app = express();
-// const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());
 
+// Connect to MongoDB
 mongoose.connect("mongodb://localhost:27017/VRC")
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-//register bata aune kura
+// Multer memory storage for storing files in memory
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// -------------------- Auth Routes -------------------- //
 app.post("/register", async(req,res) =>{
     const { name, email, password, repassword, phone }= req.body;
-    console.log("Received:", req.body);
 
     if (!name || !email ||!password || !repassword || !phone)
-        return res.status(400).json("All feilds are required");
+        return res.status(400).json("All fields are required");
 
-    if (password !== repassword){
-        return res.status(400).json("Passwords do not match");
-        return;
-    }
+    if (password !== repassword) return res.status(400).json("Passwords do not match");
 
-     const phonePattern = /^\d{10}$/;
-        if (!phonePattern.test(phone)) {
-        return res.status(400).json("Phone must be of 10 digits");
-        return;
-  }
+    const phonePattern = /^\d{10}$/;
+    if (!phonePattern.test(phone)) return res.status(400).json("Phone must be 10 digits");
 
     const userExist= await User.findOne({email});
-    if (userExist) 
-        return res.status(409).json("User already exists!");
+    if (userExist) return res.status(409).json("User already exists!");
 
-   // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-      phone,
-    });
+    const newUser = new User({ name, email, password: hashedPassword, phone });
     await newUser.save();
-    res.status(200).json("User resgistered successfully!")
-})
+    res.status(200).json("User registered successfully!")
+});
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email });
-
     if (!user) return res.status(400).json({ message: "User not found" });
 
-    // If you're using bcrypt (recommended)
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid password" });
 
     res.json({ message: "Login successful", user });
-     window.location.reload();
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
 
+// -------------------- FAQ Routes -------------------- //
 app.get("/faqs", async(req, res)=>{
   try{
     const faqs= await FAQs.find();
     res.status(200).json(faqs);
   }catch(err){
-    console.err(err);
-    res.statusMessage(500).json ("Error fetching FAQs");
+    console.error(err);
+    res.status(500).json("Error fetching FAQs");
   }
 })
 
-//add faq by admin
 app.post("/faqs", async(req,res)=>{
   try{
     const {question, answer}= req.body;
+    if(!question || !answer) return res.status(400).json("Question and answer required!");
 
-    if(!question || !answer){
-      return res.status(400).json("Question and answer required!");
-    }
-
-    const newFAQ= new FAQs({
-      question,
-      answer
-    })
-
+    const newFAQ= new FAQs({ question, answer });
     await newFAQ.save();
     res.status(201).json("FAQ added successfully!");
   }catch(err){
     console.error(err);
-    res.statusMessage(500).json("Error adding the FAQ");
+    res.status(500).json("Error adding the FAQ");
   }
 })
 
 app.delete("/faqs/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    
     const deletedFAQ = await FAQs.findByIdAndDelete(id);
-    if (!deletedFAQ) {
-      return res.status(404).json("FAQ not found");
-    }
-
+    if (!deletedFAQ) return res.status(404).json("FAQ not found");
     res.status(200).json("FAQ deleted successfully!");
   } catch (err) {
     console.error(err);
@@ -119,6 +96,7 @@ app.delete("/faqs/:id", async (req, res) => {
   }
 });
 
+// -------------------- User Routes -------------------- //
 app.get("/users", async (req, res) => {
   try {
     const users = await User.find().select('-password'); // Exclude password
@@ -129,16 +107,11 @@ app.get("/users", async (req, res) => {
   }
 });
 
-// Delete user (admin only)
 app.delete("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    
     const deletedUser = await User.findByIdAndDelete(id);
-    if (!deletedUser) {
-      return res.status(404).json("User not found");
-    }
-
+    if (!deletedUser) return res.status(404).json("User not found");
     res.status(200).json("User deleted successfully!");
   } catch (err) {
     console.error(err);
@@ -146,9 +119,9 @@ app.delete("/users/:id", async (req, res) => {
   }
 });
 
+// -------------------- Yoga & Recommendations -------------------- //
 app.post("/recommend", async (req, res) => {
   const { aiEmotion, answers } = req.body;
-
   if (!aiEmotion || !Array.isArray(answers) || answers.length !== 4)
     return res.status(400).json("aiEmotion + 4 answers required.");
 
@@ -170,30 +143,28 @@ app.post("/recommend", async (req, res) => {
     const ideal = Math.round((score / totalScore) * MAX_POSES);
     const quota = Math.max(1, Math.min(ideal, remaining));
 
-    const yogaPoses = shuffle(
-      await YogaPose.find({ emotion, type: "yoga" })
-    ).slice(0, quota).map(p => ({
-      name: p.pose_name,
-      image: p.pose_picture,
-      description: p.description,
-      type: "yoga",
-      youtube: p.youtube_link || null
-    }));
+    const yogaPoses = shuffle(await YogaPose.find({ emotion, type: "yoga" }))
+      .slice(0, quota)
+      .map(p => ({
+        name: p.pose_name,
+        image: p.pose_picture,
+        description: p.description,
+        type: "yoga",
+        youtube: p.youtube_link || null
+      }));
 
-    const facialPoses = shuffle(
-      await YogaPose.find({ emotion, type: "facialexpression" })
-    ).slice(0, 1).map(p => ({
-      name: p.pose_name,
-      image: p.pose_picture,
-      description: p.description,
-      type: "facialexpression",
-      youtube: p.youtube_link || null
-    }));
+    const facialPoses = shuffle(await YogaPose.find({ emotion, type: "facialexpression" }))
+      .slice(0, 1)
+      .map(p => ({
+        name: p.pose_name,
+        image: p.pose_picture,
+        description: p.description,
+        type: "facialexpression",
+        youtube: p.youtube_link || null
+      }));
 
     const allPoses = [...yogaPoses, ...facialPoses];
-
-    if (allPoses.length)
-      recs.push({ emotion, poses: allPoses });
+    if (allPoses.length) recs.push({ emotion, poses: allPoses });
 
     remaining -= allPoses.length;
     if (remaining <= 0) break;
@@ -202,33 +173,18 @@ app.post("/recommend", async (req, res) => {
   res.json({ recommendations: recs });
 });
 
-
-//To add yogaPose
 app.post("/yoga/add", async (req, res) => {
   try {
     const { pose_name, type, emotion, description, pose_picture, youtube_link, locked } = req.body;
-
-    const newPose = new YogaPose({
-      pose_name,
-      type,
-      emotion,
-      description,
-      pose_picture,
-      youtube_link,
-      locked: Boolean(locked) 
-    });
-
+    const newPose = new YogaPose({ pose_name, type, emotion, description, pose_picture, youtube_link, locked: Boolean(locked) });
     await newPose.save();
     res.status(200).send("Pose added successfully");
-    console.log("Received locked value:", locked, typeof locked);
-
   } catch (err) {
-    console.error("Error while adding pose:", err);
+    console.error(err);
     res.status(500).send("Failed to add pose");
   }
 });
 
-// Fetch all yoga poses
 app.get("/yoga/all", async (req, res) => {
   try {
     const poses = await YogaPose.find();
@@ -239,20 +195,11 @@ app.get("/yoga/all", async (req, res) => {
   }
 });
 
-
-//to delete yoga poses
 app.delete("/yoga/delete/:id", async (req, res) => {
   try {
     const pose = await YogaPose.findById(req.params.id);
-
-    if (!pose) {
-      return res.status(404).send("Pose not found");
-    }
-
-    if (pose.locked) {
-      return res.status(403).send("Cannot delete locked pose");
-    }
-
+    if (!pose) return res.status(404).send("Pose not found");
+    if (pose.locked) return res.status(403).send("Cannot delete locked pose");
     await YogaPose.findByIdAndDelete(req.params.id);
     res.status(200).send("Pose deleted");
   } catch (err) {
@@ -261,13 +208,63 @@ app.delete("/yoga/delete/:id", async (req, res) => {
   }
 });
 
+app.post("/upload/:userId", upload.single("image"), async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { emotion } = req.body;
 
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $push: { emotionHistory: { emotion, image: { data: req.file.buffer, contentType: req.file.mimetype } } } },
+      { new: true, select: "emotionHistory" }
+    );
 
-app.get("/", (req, res) => {
-    res.send("Server is running");
+    res.status(200).json({ message: "Upload saved", emotionHistory: user.emotionHistory });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-app.listen(5000, () => {
-    console.log("Server started at http://localhost:5000");
+// Fetch all uploads
+app.get("/my-uploads/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).select("emotionHistory");
+    if (!user) return res.status(404).json([]);
+
+    const uploads = user.emotionHistory.map((item, index) => ({
+      emotion: item.emotion,
+      imageUrl: `/image/${req.params.userId}/${index}` 
+    }));
+
+    res.status(200).json(uploads);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json([]);
+  }
 });
+
+
+// Fetch single image by index
+app.get("/image/:userId/:index", async (req, res) => {
+  try {
+    const { userId, index } = req.params;
+    const user = await User.findById(userId).select("emotionHistory");
+
+    if (!user || !user.emotionHistory[index]) return res.status(404).json({ message: "Image not found" });
+
+    const img = user.emotionHistory[index].image;
+    res.set("Content-Type", img.contentType);
+    res.send(img.data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+app.get("/", (req, res) => res.send("Server is running"));
+
+app.listen(5000, () => console.log("Server started at http://localhost:5000"));

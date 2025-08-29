@@ -1,8 +1,11 @@
 import mongoose from "mongoose";
 
 const emotionHistorySchema = new mongoose.Schema({
-  emotion: String,             
-  imageUrl: String,            
+  emotion: String,
+  image: {
+    data: Buffer,
+    contentType: String
+  }
 });
 
 const userSchema = new mongoose.Schema({

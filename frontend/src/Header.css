@@ -1,0 +1,79 @@
+.header {
+  background: #B4CCCE;
+  padding: 1rem 0;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.logo {
+  text-decoration: none;
+  color: white;
+  margin-right: 2rem; 
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: #333;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.nav-links a:hover {
+  color: #fff;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
+
+.logout-btn {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 1px solid #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.auth-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.auth-links a {
+  color: #333;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  padding: 0.5rem 1rem;
+  border: 1px solid #333;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.auth-links a:hover {
+  background: rgba(69, 142, 238, 0.3);
+}

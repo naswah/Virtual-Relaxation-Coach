@@ -7,27 +7,9 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [newFAQ, setNewFAQ] = useState({ question: '', answer: '' });
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
 
-  // Check if user is admin
-  useEffect(() => {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      const parsedUser = JSON.parse(userData);
-      setUser(parsedUser);
-      
-      // Redirect if not admin
-      if (parsedUser.role !== 'admin') {
-        alert('Access denied. Admin privileges required.');
-        window.location.href = '/';
-        return;
-      }
-    } else {
-      alert('Please login first.');
-      window.location.href = '/login';
-      return;
-    }
-  }, []);
+  // Get user from localStorage
+  const user = JSON.parse(localStorage.getItem('user'));
 
   // Fetch FAQs
   const fetchFAQs = async () => {
@@ -69,14 +51,14 @@ const AdminDashboard = () => {
         body: JSON.stringify(newFAQ),
       });
 
-      const data = await response.json();
+      const data = await response.text();
 
       if (response.ok) {
-        alert(data.message || 'FAQ added successfully!');
+        alert(data || 'FAQ added successfully!');
         setNewFAQ({ question: '', answer: '' });
         fetchFAQs(); // Refresh FAQ list
       } else {
-        alert(data.message || 'Error adding FAQ');
+        alert(data || 'Error adding FAQ');
       }
     } catch (error) {
       console.error('Error adding FAQ:', error);
@@ -93,13 +75,13 @@ const AdminDashboard = () => {
           method: 'DELETE',
         });
 
-        const data = await response.json();
+        const data = await response.text();
 
         if (response.ok) {
-          alert(data.message || 'FAQ deleted successfully!');
+          alert(data || 'FAQ deleted successfully!');
           fetchFAQs(); // Refresh FAQ list
         } else {
-          alert(data.message || 'Error deleting FAQ');
+          alert(data || 'Error deleting FAQ');
         }
       } catch (error) {
         console.error('Error deleting FAQ:', error);
@@ -116,13 +98,13 @@ const AdminDashboard = () => {
           method: 'DELETE',
         });
 
-        const data = await response.json();
+        const data = await response.text();
 
         if (response.ok) {
-          alert(data.message || 'User deleted successfully!');
+          alert(data || 'User deleted successfully!');
           fetchUsers(); // Refresh user list
         } else {
-          alert(data.message || 'Error deleting user');
+          alert(data || 'Error deleting user');
         }
       } catch (error) {
         console.error('Error deleting user:', error);
@@ -131,25 +113,28 @@ const AdminDashboard = () => {
     }
   };
 
-
+  // Load data on component mount
   useEffect(() => {
-    if (user && user.role === 'admin') {
-      fetchFAQs();
-      fetchUsers();
-    }
-  }, [user]);
+    fetchFAQs();
+    fetchUsers();
+  }, []);
 
-  // Don't render anything if user is not loaded yet or not admin
+  // Show access denied if not admin
   if (!user || user.role !== 'admin') {
     return (
       <div className="admin-dashboard">
-        <div className="loading">Loading...</div>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <h2>Access Denied</h2>
+          <p>Admin privileges required to access this page.</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="admin-dashboard">
+      <h1>Admin Dashboard</h1>
+      <p>Welcome, {user?.name}!</p>
 
       <div className="dashboard-tabs">
         <button 
@@ -170,16 +155,14 @@ const AdminDashboard = () => {
         <div className="tab-content">
           <div className="add-faq-section">
             <h2>Add New FAQ</h2>
-
             <form onSubmit={handleAddFAQ} className="faq-form">
               <div className="form-group">
-
                 <label>Question:</label>
                 <input
                   type="text"
                   value={newFAQ.question}
                   onChange={(e) => setNewFAQ({...newFAQ, question: e.target.value})}
-                 
+                  placeholder="Enter FAQ question"
                   required
                 />
               </div>
@@ -188,7 +171,7 @@ const AdminDashboard = () => {
                 <textarea
                   value={newFAQ.answer}
                   onChange={(e) => setNewFAQ({...newFAQ, answer: e.target.value})}
-                  
+                  placeholder="Enter FAQ answer"
                   rows="4"
                   required
                 />
@@ -200,22 +183,26 @@ const AdminDashboard = () => {
           </div>
 
           <div className="faq-list-section">
-            <h2>Existing FAQs</h2>
+            <h2>Existing FAQs ({faqs.length})</h2>
             <div className="faq-list">
-              {faqs.map((faq) => (
-                <div key={faq._id} className="faq-item">
-                  <div className="faq-content">
-                    <h3>{faq.question}</h3>
-                    <p>{faq.answer}</p>
+              {faqs.length === 0 ? (
+                <p>No FAQs found.</p>
+              ) : (
+                faqs.map((faq) => (
+                  <div key={faq._id} className="faq-item">
+                    <div className="faq-content">
+                      <h3>{faq.question}</h3>
+                      <p>{faq.answer}</p>
+                    </div>
+                    <button 
+                      onClick={() => handleDeleteFAQ(faq._id)}
+                      className="delete-btn"
+                    >
+                      Delete
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => handleDeleteFAQ(faq._id)}
-                    className="delete-btn"
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -224,43 +211,47 @@ const AdminDashboard = () => {
       {activeTab === 'users' && (
         <div className="tab-content">
           <div className="users-section">
-            <h2>Registered Users</h2>
+            <h2>Registered Users ({users.length})</h2>
             <div className="users-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Role</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => (
-                    <tr key={user._id}>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <td>{user.phone}</td>
-                      <td>
-                        <span className={`role ${user.role}`}>
-                          {user.role}
-                        </span>
-                      </td>
-                      <td>
-                        {user.role !== 'admin' && (
-                          <button 
-                            onClick={() => handleDeleteUser(user._id, user.email)}
-                            className="delete-btn"
-                          >
-                            Delete
-                          </button>
-                        )}
-                      </td>
+              {users.length === 0 ? (
+                <p>No users found.</p>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Role</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {users.map((userItem) => (
+                      <tr key={userItem._id}>
+                        <td>{userItem.name}</td>
+                        <td>{userItem.email}</td>
+                        <td>{userItem.phone}</td>
+                        <td>
+                          <span className={`role ${userItem.role}`}>
+                            {userItem.role}
+                          </span>
+                        </td>
+                        <td>
+                          {userItem.role !== 'admin' && (
+                            <button 
+                              onClick={() => handleDeleteUser(userItem._id, userItem.email)}
+                              className="delete-btn"
+                            >
+                              Delete
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>

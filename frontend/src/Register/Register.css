@@ -4,6 +4,7 @@
     justify-content: center;
     height: 65vh;
     position: relative;
+    margin-bottom: 50px;
 }
 h2{
     align-items: center;
@@ -14,7 +15,7 @@ label{
     color: #333;
 }
 .box{
-    background: #e4f3bf;
+    background: #f1f1f1;
     padding: 25px;
     border-radius: 20px;
     width: 350px;
@@ -38,7 +39,7 @@ label{
     padding: 0 8px;
 }
 .btn{
-    background:  #B4CCCE;
+    background: linear-gradient(to right,#C3D0A2, #B4CCCE);
     height: 30px;
     border: none ;
     border-radius: 8px;

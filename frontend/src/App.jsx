@@ -11,16 +11,38 @@ import Register from "./Register/Register";
 import Login from "./Register/Login";
 import AdminDashboard from './AdminDashboard';
 import AddRecommendation from './Emotion/AddRecommendation';
+import UserUploads from "./UserUploads";
 
 function App() {
+  const [user, setUser] = useState(null);
 
-    const [user, setUser] = useState(null);
-
-  useEffect(() => {
+  // Function to update user state
+  const updateUser = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+    } else {
+      setUser(null);
     }
+  };
+
+  useEffect(() => {
+    updateUser();
+
+    // Listen for storage changes (when user logs in/out)
+    const handleStorageChange = () => {
+      updateUser();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also listen for custom event when login happens in same tab
+    window.addEventListener('userLogin', updateUser);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('userLogin', updateUser);
+    };
   }, []);
 
   return (
@@ -28,20 +50,26 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-          <Route path="/faq" element={
-            <>
-              <Header />
-              {user?.role === "admin" ? <AdminDashboard /> : <Faq />}
-              <Footer />
-            </>
-          }
-        />
-
+        <Route path="/faq" element={
+          <>
+            <Header />
+            {user?.role === "admin" ? <AdminDashboard /> : <Faq />}
+            <Footer />
+          </>
+        } />
 
         <Route path="/emotion" element={
           <>
             <Header />
             {user?.role === "admin" ? <AddRecommendation /> : <Emotion />}
+            <Footer />
+          </>
+        } />
+
+        <Route path="/admin" element={
+          <>
+            <Header />
+            <AdminDashboard />
             <Footer />
           </>
         } />
@@ -62,15 +90,15 @@ function App() {
           </>
         } />
 
+        <Route path="/uploads" element={<UserUploads />} />
+
         <Route path="/login" element={
           <>
             <Header />
-            <Login />
+            <Login setUser={setUser} />
             <Footer />
           </>
         } />
-
-      
       </Routes>
     </BrowserRouter>
   );
