@@ -21,7 +21,7 @@ function Header() {
         <nav className="nav-links">
           <Link to="/">Home</Link>
           
-          <Link to={isAdmin ? "/admin" : "/emotion"}>
+          <Link to={isAdmin ? "/admin/add-recommendation" : "/emotion"}>
             {isAdmin ? "Add Recommendations" : "Detect Emotion"}
           </Link>
           

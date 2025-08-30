@@ -10,8 +10,8 @@ function Footer() {
       <div className="footer-center">
         <Link to="/">Home</Link>
         <Link to="/faq">FAQs</Link>
-        <Link to="/upload">Upload Images</Link>
         <Link to="/profile">Profile</Link>
+        <p>Thank you for using VRC!</p>
       </div>
 
       <div className="footer-right">

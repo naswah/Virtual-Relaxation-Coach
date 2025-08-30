@@ -74,6 +74,14 @@ function App() {
           </>
         } />
 
+          <Route path="/admin/add-recommendation" element={
+            <>
+              <Header />
+              <AddRecommendation />
+              <Footer />
+            </>
+          } />
+
         <Route path="/profile" element={
           <>
             <Header />

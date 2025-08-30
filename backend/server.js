@@ -122,15 +122,42 @@ app.delete("/users/:id", async (req, res) => {
 // -------------------- Yoga & Recommendations -------------------- //
 app.post("/recommend", async (req, res) => {
   const { aiEmotion, answers } = req.body;
-  if (!aiEmotion || !Array.isArray(answers) || answers.length !== 4)
-    return res.status(400).json("aiEmotion + 4 answers required.");
+
+  if (!aiEmotion && (!Array.isArray(answers) || answers.length === 0)) {
+    return res.status(400).json("Either aiEmotion or answers required.");
+  }
 
   const scores = {};
-  const bump = (emo) => (scores[emo] = (scores[emo] || 0) + 1);
-  bump(aiEmotion);
-  answers.forEach(bump);
 
-  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  // Count AI detected emotion if provided
+  if (aiEmotion) scores[aiEmotion] = (scores[aiEmotion] || 0) + 1;
+
+  // Count question answers if provided
+  if (answers && answers.length > 0) {
+    answers.forEach(ans => {
+      if (ans) scores[ans] = (scores[ans] || 0) + 1;
+    });
+  }
+
+  // Priority ranking: lower number = higher priority
+  const PRIORITY = {
+    fear: 1,
+    sad: 1,
+    angry: 1,
+    surprise: 2,
+    neutral: 3,
+    happy: 4
+  };
+
+  // Sort by score, then by priority
+  const sorted = Object.entries(scores).sort((a, b) => {
+    if (b[1] !== a[1]) return b[1] - a[1]; 
+    return (PRIORITY[a[0]] || 5) - (PRIORITY[b[0]] || 5);
+  });
+
+  if (sorted.length === 0) {
+    return res.json({ recommendations: [] });
+  }
 
   const MAX_POSES = 5;
   const totalScore = sorted.reduce((s, [, v]) => s + v, 0);

@@ -1,4 +1,3 @@
-// Emotion.jsx
 import "./Emotion.css";
 import { useState } from "react";
 import axios from "axios";
@@ -9,30 +8,19 @@ const QUESTIONS = [
   "How do you feel about your energy right now?",
   "What emotion most describes your current thoughts?",
   "Which emotion affected you most today?",
-  "What do you want to feel?"
+  "What was your emotion an hour ago?"
 ];
 
-const OPTIONS = ["happy", "sad", "angry", "neutral", "surprise"];
+const OPTIONS = ["happy", "sad", "angry", "neutral", "surprise", "fear"];
 
 function Emotion() {
   const user = JSON.parse(localStorage.getItem("user"));
+  const [mode, setMode] = useState(null); 
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [aiEmotion, setAiEmotion] = useState("");
   const [answers, setAnswers] = useState(Array(4).fill(""));
   const [recs, setRecs] = useState(null);
-
-    const fetchImage = async (userId, index) => {
-    try {
-      const res = await axios.get(`http://localhost:5000/image/${userId}/${index}`, {
-        responseType: "blob" // important for binary data
-      });
-      const url = URL.createObjectURL(res.data);
-      setImage(url);
-    } catch (err) {
-      console.error("Error fetching image:", err);
-    }
-  };
 
   const updateAnswer = (idx, val) => {
     const next = [...answers];
@@ -47,26 +35,20 @@ function Emotion() {
     setImage(URL.createObjectURL(selectedFile));
     setFile(selectedFile);
 
-    // Detect emotion first
     const emotion = await detectEmotion(selectedFile);
     setAiEmotion(emotion);
-    console.log("Detected emotion:", emotion);
 
-    // Upload to backend
     if (user?._id) {
       const formData = new FormData();
-      formData.append("image", selectedFile); // key must match Multer
+      formData.append("image", selectedFile);
       formData.append("emotion", emotion);
 
       try {
-        const res = await axios.post(
+        await axios.post(
           `http://localhost:5000/upload/${user._id}`,
           formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" }
-          }
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
-        console.log("Upload successful:", res.data);
       } catch (err) {
         console.error("Upload failed:", err.response?.data || err.message);
       }
@@ -74,7 +56,7 @@ function Emotion() {
   };
 
   const submit = async () => {
-    if (answers.some(a => a === "")) {
+    if (mode === "questions" && answers.some(a => a === "")) {
       return alert("You must answer all questions for recommendations!");
     }
 
@@ -82,7 +64,10 @@ function Emotion() {
       const res = await fetch("http://localhost:5000/recommend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ aiEmotion: aiEmotion || answers[0], answers })
+        body: JSON.stringify({
+          aiEmotion: mode === "image" ? aiEmotion : null,
+          answers: mode === "questions" ? answers : []
+        })
       });
 
       const data = await res.json();
@@ -96,48 +81,63 @@ function Emotion() {
     <div className="Emotion">
       <h1>Detect your emotion</h1>
 
-      {!image && (
+      {!mode && (
+        <div style={{ marginBottom: "1rem" }}>
+          <button onClick={() => setMode("image")}>Through Photo</button>
+          <button onClick={() => setMode("questions")} style={{ marginLeft: "1rem" }}>
+            Through Questions
+          </button>
+        </div>
+      )}
+
+      {mode === "image" && (
         <>
-          <label htmlFor="fileUpload" className="file-label">
-            Choose an image
-          </label>
-          <input
-            id="fileUpload"
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="file-input"
-          />
+          {!image && (
+            <>
+              <label htmlFor="fileUpload" className="file-label">
+                Choose an image
+              </label>
+              <input
+                id="fileUpload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="file-input"
+              />
+            </>
+          )}
+          {image && <img src={image} width="200" alt="Uploaded Preview" />}
+          {aiEmotion && <h3>Detected Emotion: {aiEmotion}</h3>}
+          {aiEmotion && (
+            <button onClick={submit} style={{ marginTop: "1rem" }}>
+              Get Recommendations
+            </button>
+          )}
         </>
       )}
 
-      {image && <img src={image} width="200" alt="Uploaded Preview" />}
-      {aiEmotion && <h3>Detected Emotion: {aiEmotion}</h3>}
-
-      {aiEmotion && QUESTIONS.map((question, index) => (
-        <div key={index} style={{ display: "flex", alignItems: "center", marginTop: "0.5rem" }}>
-          <p style={{ marginRight: "1rem" }}>{question}</p>
-          {OPTIONS.map(option => (
-            <label key={option} style={{ marginRight: "1rem" }}>
-              <input
-                type="radio"
-                name={`question-${index}`}
-                value={option}
-                onChange={() => updateAnswer(index, option)}
-              />
-              {option}
-            </label>
+      {mode === "questions" && (
+        <>
+          {QUESTIONS.map((question, index) => (
+            <div key={index} style={{ marginTop: "1rem" }}>
+              <p>{question}</p>
+              {OPTIONS.map(option => (
+                <label key={option} style={{ marginRight: "1rem" }}>
+                  <input
+                    type="radio"
+                    name={`question-${index}`}
+                    value={option}
+                    onChange={() => updateAnswer(index, option)}
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
           ))}
-        </div>
-      ))}
-
-      {aiEmotion && (
-        <button
-          onClick={submit}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
-        >
-          Get Recommendations
-        </button>
+          <button onClick={submit} style={{ marginTop: "1rem" }}>
+            Get Recommendations
+          </button>
+        </>
       )}
 
       {recs && <Recommendation recs={recs} />}

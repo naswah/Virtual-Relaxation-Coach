@@ -56,4 +56,3 @@ function HomeCards() {
 }
 
 export default HomeCards; 
-// homecard
