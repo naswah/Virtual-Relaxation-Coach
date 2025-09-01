@@ -13,7 +13,9 @@ function Recommendation({ recs }) {
               <li key={p.name}>
                 <div className="pose-info">
                   <h5>{p.name}</h5>
-                  <p>{p.description}</p>
+                  {p.description.split(/(?:\d+\.\s+)/).filter(Boolean).map((step, i) => (
+                    <li key={i}>{step.trim()}</li>
+                  ))}
                 </div>
                 {p.image && (
                   <img className="pose-image" src={p.image} alt={p.name} />
