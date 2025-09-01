@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import "./Header.css";
+
 function Header() {
   // Get user from localStorage
   const user = JSON.parse(localStorage.getItem("user"));
@@ -32,10 +33,16 @@ function Header() {
           {!isAdmin && (
             <Link to="/uploads">My Uploads</Link>
           )}
-          
+
           {user ? (
             <div className="user-section">
+
+              <Link to="/profile" className="profile-link">
+                Profile
+              </Link>
+
               <span>Welcome, {user.name}</span>
+
               <button onClick={handleLogout} className="logout-btn">
                 Logout
               </button>

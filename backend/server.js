@@ -291,6 +291,38 @@ app.get("/image/:userId/:index", async (req, res) => {
   }
 });
 
+// Edit profile
+app.put("/users/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, phone } = req.body;
+
+    if (!name || !email || !phone) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const phonePattern = /^\d{10}$/;
+    if (!phonePattern.test(phone)) {
+      return res.status(400).json({ message: "Phone must be 10 digits" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { name, email, phone },
+      { new: true, select: "-password" } // exclude password
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 app.get("/", (req, res) => res.send("Server is running"));
 

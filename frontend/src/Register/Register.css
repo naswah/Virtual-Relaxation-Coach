@@ -1,50 +1,62 @@
-.container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 65vh;
-    position: relative;
-    margin-bottom: 50px;
+.container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 25px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
 }
-h2{
-    align-items: center;
-    font-family: "Poppins", sans-serif;
-    color: #333;
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-family: Arial, sans-serif;
 }
-label{
-    color: #333;
+
+.form-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
-.box{
-    background: #f1f1f1;
-    padding: 25px;
-    border-radius: 20px;
-    width: 350px;
-    font-family: "Poppins", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    position: relative;
-    z-index: 2;
-  }
-.form-box form .field{
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
+
+.form-box label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
 }
-.form-box form .input input{
-    height: 25px;
-    margin-top: 5px;
-    border: 1px solid #706d6d;
-    border-radius: 8px;
-    width: 100%;
-    padding: 0 8px;
+
+.form-box input {
+  width: 80%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 6px;
+  font-size: 14px;
+  transition: border 0.3s ease;
 }
-.btn{
-    background: linear-gradient(to right,#C3D0A2, #B4CCCE);
-    height: 30px;
-    border: none ;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    width: 105%;
-    align-items: center;
+
+.form-box input:focus {
+  outline: none;
+  border-color: #7ca982; 
+}
+
+.btn {
+  background: linear-gradient(to right, #C3D0A2, #B4CCCE);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+}
+
+.btn:hover {
+  background: #5d7779; /* darker gradient hover */
 }
